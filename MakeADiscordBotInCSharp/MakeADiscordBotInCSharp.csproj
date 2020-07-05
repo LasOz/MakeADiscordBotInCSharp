@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Version>0.0.1</Version>
+    <Authors>Laser Ozdonmez</Authors>
+    <Description>A base for building a DiscordBot from that, hopefully, takes out some of the hassle and gets you up and running faster.</Description>
+    <Copyright></Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommandLineParser" Version="2.8.0" />
+    <PackageReference Include="Discord.Net" Version="2.2.0" />
+  </ItemGroup>
+
+</Project>
