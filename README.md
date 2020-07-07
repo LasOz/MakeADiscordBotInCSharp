@@ -3,13 +3,13 @@ A tiny framework from which to get started making a discord bot.
 
 This framework doesn't do anything special, it just combines a popular [.NET Discord library](https://github.com/discord-net/Discord.Net) with the [CommandLineParser's library](https://github.com/commandlineparser/commandline).
 
-No need to download the source in this project, a NuGet package is available!
+No need to download the source in this project, a [NuGet package](https://www.nuget.org/packages/MakeADiscordBotInCSharp/) is available!
 
 If you are a total novice to CSharp, Visual Studio or Discord Bot making then go to "Quickstart Guide For Total Beginners".
 
 If you have some experience with all the aforementioned then follow these steps:
 1. Create a new CSharp .NET console project.
-1. Add the NuGet package "Madbics" to it.
+1. Add the NuGet package "Madbics" to it through the NuGet package manager.
 1. Add `using Madbics;` to your source file and in your `Main` method add `DiscordBotBase.CreateAndRun(args[0]);`.
 1. Open your project proerties and set your *Application Arguments* (under DEBUG) to your bot's login token.
 1. As a sanity check run your bot and send it the following message `@[your_bot_name] help` and it should respond with a formatted helptext.
