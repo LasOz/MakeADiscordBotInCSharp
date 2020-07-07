@@ -1,7 +1,19 @@
 # MakeADiscordBotInCSharp (Madbics)
 A tiny framework from which to get started making a discord bot.
 
+This framework doesn't do anything special, it just combines a popular [.NET Discord library](https://github.com/discord-net/Discord.Net) with the [CommandLineParser's library](https://github.com/commandlineparser/commandline).
+
 No need to download the source in this project, a NuGet package is available!
+
+If you are a total novice to CSharp, Visual Studio or Discord Bot making then go to "Quickstart Guide For Total Beginners".
+
+If you have some experience with all the aforementioned then follow these steps:
+1. Create a new CSharp .NET console project.
+1. Add the NuGet package "Madbics" to it.
+1. Add `using Madbics;` to your source file and in your `Main` method add `DiscordBotBase.CreateAndRun(args[0]);`.
+1. Open your project proerties and set your *Application Arguments* (under DEBUG) to your bot's login token.
+1. As a sanity check run your bot and send it the following message `@[your_bot_name] help` and it should respond with a formatted helptext.
+1. If you want to know how to expand its functionality from this humble base go to "How do I add a command" in the FAQ section.
 
 # Quickstart Guide For Total Beginners
 If you already have Visual Studio then this guide will get you set up in 5 minutes.
@@ -72,11 +84,117 @@ You should not share the token with anyone, as it will allow them to control you
 1. Now try `@[name_of_your_bot] help`, and follow its advice.
 
 ### How To Expand
-This framework doesn't do anything special, it just combines Discord's library with CommandLineParser's library.
+This framework doesn't do anything special, it just combines a popular [.NET Discord library](https://github.com/discord-net/Discord.Net) with the [CommandLineParser's library](https://github.com/commandlineparser/commandline).
 
-If you want to add a command all you need to do is the following:
-THIS DOCUMENT IS A WIP.
+#### Let's walk through adding a command.
+
+Add `using Discord.WebSocket;`, `using CommandLine;` and `using System.Linq;` to your program. Above your `Program` class add a new class called `ReverseVerb` and declare it to use the `IDiscordAction` interface. Make the new class follow the interface by adding a method with the following signature `public void PerformAction(SocketMessage message, DiscordSocketClient botClient)`. Annotate this new class with `[Verb("reverse", HelpText = "Reverses the given message")]`. You should now have the following:
+```CS
+[Verb("Reverse", HelpText = "Reverses the message")]
+	class ReverseOption : IDiscordAction
+	{
+		public void PerformAction(SocketMessage message, DiscordSocketClient botClient)
+		{
+			throw new NotImplementedException();
+		}
+	}
+```
+
+Add a `public string` property to this new class called `Message`. Annotate this property with `[Value(0, MetaName = "Message", HelpText = "The message that will be reversed.")]`. Edit the `PerformAction` method body to be `message.Channel.SendMessageAsync(new string(Message.Reverse().ToArray()));`. You should now have the following:
+```CS
+[Verb("Reverse", HelpText = "Reverses the message")]
+	class ReverseOption : IDiscordAction
+	{
+		[Value(0, MetaName = "Message", HelpText = "The message that will be reversed.")]
+		public string Message { get; set; }
+
+		public void PerformAction(SocketMessage message, DiscordSocketClient botClient)
+		{
+			message.Channel.SendMessageAsync(new string(Message.Reverse().ToArray()));
+		}
+	}
+```
+
+Now it's time to test this! Run your bot code using F5 and in a server with your bot (or direct message with your bot) send `@[name_of_your_bot] help`. Your new command should appear in the help listing. At the moment your command works by taking a single *value* that it manipulates according to what you have written in the `PerformAction` method. If you try `@[name_of_your_bot] reverse "DING DONG"` and it should respond with `GNOD GNID`! Let's add a little more functionality.
+
+Add a new `public bool` property to the `ReverseVerb` class called `PreserveWordOrder`. Give this property the annotation `[Option('p', "preserve-word-order", Default = false, HelpText = "Will keep order of words while reversing them.")]`. Now you need to change the body of the `PerformAction` method to follow what we want it to do i.e. keep the order of the words while reversing all of their letters. You can try this as an exercise for yourself or you can copy the solution following:
+```CS
+	[Verb("Reverse", HelpText = "Reverses the message")]
+	class ReverseOption : IDiscordAction
+	{
+		[Value(0, MetaName = "Message", HelpText = "The message that will be reversed.")]
+		public string Message { get; set; }
+
+		[Option('p', "preserve-word-order", Default = false, HelpText = "Will keep order of words while reversing them.")]
+		public bool PreserveWordOrder { get; set; }
+
+		public void PerformAction(SocketMessage message, DiscordSocketClient botClient)
+		{
+			var output = new string(Message.Reverse().ToArray());
+
+			if (PreserveWordOrder)
+			{
+				var words = output.Split(' ');
+				output = string.Join(' ', words.Reverse());
+			}
+
+			message.Channel.SendMessageAsync(output);
+		}
+	}
+```
+
+Now try to run your command through your bot again. Run your program and send your bot the following message `@[name_of_your_bot] reverse "DING DONG"` and it should still respond with `GNOD GNID`. Now try `@[name_of_your_bot] reverse -p "DING DONG"` and it should respond with `GNID GNOD`.
+
+Let's add one more option to make sure you're getting it. Add a `public char` property with the annotation `[Option('r', "replace-spaces", HelpText = "Define a letter to replace all spaces with.")]`. Again, you can choose to fill in this functionality as an exercise or you can simply use the following solution.
+```CS
+	[Verb("Reverse", HelpText = "Reverses the message")]
+	class ReverseOption : IDiscordAction
+	{
+		[Value(0, MetaName = "Message", HelpText = "The message that will be reversed.")]
+		public string Message { get; set; }
+
+		[Option('p', "preserve-word-order", Default = false, HelpText = "Will keep order of words while reversing them.")]
+		public bool PreserveWordOrder { get; set; }
+
+		[Option('r', "replace-spaces", HelpText = "Define a letter to replace all spaces with.")]
+		public char VowelReplacer { get; set; }
+
+		public void PerformAction(SocketMessage message, DiscordSocketClient botClient)
+		{
+			var output = new string(Message.Reverse().ToArray());
+
+			if (PreserveWordOrder)
+			{
+				var words = output.Split(' ');
+				output = string.Join(' ', words.Reverse());
+			}
+
+			//We check if this is assigned or not and use that as an indication on whether to replace.
+			if (VowelReplacer != default)
+			{
+				output.Replace(' ', VowelReplacer);
+			}
+
+			message.Channel.SendMessageAsync(output);
+		}
+	}
+```
+
+You now know what to do! Run your bot. Send it the following message `@[name_of_your_bot] reverse -r @ -p "DING DONG"` and it should say back to you `GNID@GNOD`. Congratulations you have added a function to your discord bot and fleshed it out with options and arguments.
 
 ### Extra Tips
-- Keep Discord's documentation handy (link) so you can work out how to interact with Discord's objects.
-- Keep CommandLineParser's documentation handy (link) so you can work out how to make commands for your bot.
+- Keep [Discord's documentation handy](https://discord.com/developers/docs/intro) so you can work out how to interact with Discord's objects.
+- Keep [CommandLineParser's documentation handy](https://github.com/commandlineparser/commandline/wiki) so you can work out how to make commands for your bot.
+
+# FAQ
+## How do I add a command?
+Adding a command should be dead simple:
+1. Add a class anywhere in your assembly annotated with `[Verb(...)]` that follows the `IDiscordAction` interface.
+2. Configure the command how you wish, possibly by adding some `[Option(...)]`s.
+3. You're done! The framework will pick up your new command and (provided you've filled this information in on the annotations) generate help-text for users to read and understand how your bot works.
+
+For more information on these annotations see [this documentation](https://github.com/commandlineparser/commandline/wiki).
+
+The command you create is run asyncronously meaning that your `PerformAction` method will execute while the bot attempts to listen for and execute more commands. This is both a blessing and a curse, so be wary!
+
+**This section needs expanding. You can help that by being the question asker!**
