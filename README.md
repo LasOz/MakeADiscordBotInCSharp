@@ -90,7 +90,7 @@ This framework doesn't do anything special, it just combines a popular [.NET Dis
 
 Add `using Discord.WebSocket;`, `using CommandLine;` and `using System.Linq;` to your program. Above your `Program` class add a new class called `ReverseVerb` and declare it to use the `IDiscordAction` interface. Make the new class follow the interface by adding a method with the following signature `public void PerformAction(SocketMessage message, DiscordSocketClient botClient)`. Annotate this new class with `[Verb("reverse", HelpText = "Reverses the given message")]`. You should now have the following:
 ```CS
-[Verb("Reverse", HelpText = "Reverses the message")]
+[Verb("reverse", HelpText = "Reverses the message")]
 	class ReverseOption : IDiscordAction
 	{
 		public void PerformAction(SocketMessage message, DiscordSocketClient botClient)
@@ -102,7 +102,7 @@ Add `using Discord.WebSocket;`, `using CommandLine;` and `using System.Linq;` to
 
 Add a `public string` property to this new class called `Message`. Annotate this property with `[Value(0, MetaName = "Message", HelpText = "The message that will be reversed.")]`. Edit the `PerformAction` method body to be `message.Channel.SendMessageAsync(new string(Message.Reverse().ToArray()));`. You should now have the following:
 ```CS
-[Verb("Reverse", HelpText = "Reverses the message")]
+[Verb("reverse", HelpText = "Reverses the message")]
 	class ReverseOption : IDiscordAction
 	{
 		[Value(0, MetaName = "Message", HelpText = "The message that will be reversed.")]
@@ -119,7 +119,7 @@ Now it's time to test this! Run your bot code using F5 and in a server with your
 
 Add a new `public bool` property to the `ReverseVerb` class called `PreserveWordOrder`. Give this property the annotation `[Option('p', "preserve-word-order", Default = false, HelpText = "Will keep order of words while reversing them.")]`. Now you need to change the body of the `PerformAction` method to follow what we want it to do i.e. keep the order of the words while reversing all of their letters. You can try this as an exercise for yourself or you can copy the solution following:
 ```CS
-	[Verb("Reverse", HelpText = "Reverses the message")]
+	[Verb("reverse", HelpText = "Reverses the message")]
 	class ReverseOption : IDiscordAction
 	{
 		[Value(0, MetaName = "Message", HelpText = "The message that will be reversed.")]
@@ -147,7 +147,7 @@ Now try to run your command through your bot again. Run your program and send yo
 
 Let's add one more option to make sure you're getting it. Add a `public char` property with the annotation `[Option('r', "replace-spaces", HelpText = "Define a letter to replace all spaces with.")]`. Again, you can choose to fill in this functionality as an exercise or you can simply use the following solution.
 ```CS
-	[Verb("Reverse", HelpText = "Reverses the message")]
+	[Verb("reverse", HelpText = "Reverses the message")]
 	class ReverseOption : IDiscordAction
 	{
 		[Value(0, MetaName = "Message", HelpText = "The message that will be reversed.")]
