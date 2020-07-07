@@ -51,8 +51,8 @@ namespace Madbics
 	/// </summary>
 	public class DiscordBotBase
 	{
-		private readonly Version m_baseVersion = new Version(0, 0, 0, 0);
-		private readonly Uri m_gitLink = new Uri("http://www.google.com");
+		private readonly Version m_baseVersion = new Version(0, 0, 0, 1);
+		private readonly Uri m_gitLink = new Uri("https://github.com/LasOz/MakeADiscordBotInCSharp");
 
 		private readonly string m_loginToken;
 		private readonly Parser m_commandParser;
@@ -64,7 +64,7 @@ namespace Madbics
 		/// <summary>
 		/// <para>Creates an instance of the discord bot class. Will search the calling assembly for all <c>VerbAttributes</c> and apply them to its command parsing rules..</para>
 		/// </summary>
-		/// <param name="loginToken"></param>
+		/// <param name="loginToken">The client secret discord uses to login.</param>
 		public DiscordBotBase(string loginToken)
 		{
 			m_loginToken = loginToken;
@@ -155,7 +155,17 @@ namespace Madbics
 			await m_client.LoginAsync(TokenType.Bot, m_loginToken);
 			await m_client.StartAsync();
 
-			_ = Task.Delay(-1);
+			await Task.Delay(-1);
+		}
+
+		/// <summary>
+		/// <para>A shorthand for creating a <c>DiscordBotBase</c> object and starting the client with the provided login token.</para>
+		/// <para>Call blocks until bot is shutdown.</para>
+		/// </summary>
+		/// <param name="loginToken">The client secret discord uses to login.</param>
+		public static void CreateAndStart(string loginToken)
+		{
+			new DiscordBotBase(loginToken).Start().Wait();
 		}
 
 		/// <summary>

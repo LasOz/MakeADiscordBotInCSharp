@@ -4,13 +4,40 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <Version>0.0.1</Version>
     <Authors>Laser Ozdonmez</Authors>
-    <Description>A base for building a DiscordBot from that, hopefully, takes out some of the hassle and gets you up and running faster.</Description>
-    <Copyright></Copyright>
+    <Description>A base for building a DiscordBot from that, hopefully, takes out some of the hassle and gets you up and running faster.
+
+Combines the CSharp Discord API wrapper library and the CommandLineParser library.</Description>
+    <Copyright>Laser Ozdonmez</Copyright>
+    <Company />
+    <PackageTags>madbics make a discord bot in c sharp</PackageTags>
+    <RepositoryUrl>https://github.com/LasOz/MakeADiscordBotInCSharp</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReleaseNotes>This is a release mainly to ensure the package can be published correctly. It is functional but highly untested. Please open feature requests and issues on the git-repository page if you wish.</PackageReleaseNotes>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageProjectUrl>https://github.com/LasOz/MakeADiscordBotInCSharp</PackageProjectUrl>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <Optimize>true</Optimize>
+    <DocumentationFile>X:\IWantToMakeADiscordBotInCSharp\MakeADiscordBotInCSharp\MakeADiscordBotInCSharp.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.8.0" />
     <PackageReference Include="Discord.Net" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="icon\icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
