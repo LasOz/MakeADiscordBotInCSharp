@@ -52,7 +52,7 @@ namespace Madbics
 			yield return str.Substring(nextPiece);
 		}
 
-		public static string TrimMatchingQuotes(this string input, char quote)
+		private static string TrimMatchingQuotes(this string input, char quote)
 		{
 			if ((input.Length >= 2) &&
 				(input[0] == quote) && (input[input.Length - 1] == quote))

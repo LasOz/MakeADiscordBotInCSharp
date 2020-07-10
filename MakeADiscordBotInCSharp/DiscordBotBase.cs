@@ -9,12 +9,6 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-//Put in a note for people wrt publishing and how "long windows paths" will need to be enabled
-//Also running as admin
-
-/// <summary>
-/// <para><c>Madbics</c> is Make A Discord Bot In C Sharp!</para>
-/// </summary>
 namespace Madbics
 {
 	/// <summary>
@@ -32,17 +26,26 @@ namespace Madbics
 	}
 
 	[Verb("Example-Verb", HelpText = "This is what a description for a command will look like. This command will echo back the string that follows it.")]
-	public class ExampleVerb : IDiscordAction
+	class ExampleVerb : IDiscordAction
 	{
+		/// <summary>
+		/// <para>An example of an all encompassing value parameter.</para>
+		/// </summary>
 		[Value(0, Required = true, HelpText = "The string that will be echoed back. IF you string has whitespace remember to encase it in quotes e.g. \"Hello World!\"")]
-		public string EchoString { get; set; }
+		public IEnumerable<string> EchoString { get; set; }
 
+		/// <summary>
+		/// <para>An example of a simple option switch.</para>
+		/// </summary>
 		[Option("Option-Switch", Default = false, HelpText = "This is an example option. When present it will print the current time.")]
 		public bool AnOptionSwitch { get; set; }
 
+		/// <summary>
+		/// <para>An example of a filled in PerformAction method.</para>
+		/// </summary>
 		public void PerformAction(SocketMessage message, DiscordSocketClient _)
 		{
-			message.Channel.SendMessageAsync($"Echoing back: {EchoString} {(AnOptionSwitch ? DateTime.Now.ToString() : "")}");
+			message.Channel.SendMessageAsync($"Echoing back: {string.Join(' ', EchoString)} {(AnOptionSwitch ? DateTime.Now.ToString() : "")}");
 		}
 	}
 
